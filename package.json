@@ -1,0 +1,16 @@
+{
+  "name": "school_management-system",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "add-css": "npx tailwindcss -o dist/style/style.css --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.3.5",
+    "postcss": "^8.3.8",
+    "tailwindcss": "^2.2.15"
+  }
+}

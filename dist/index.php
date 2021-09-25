@@ -9,8 +9,9 @@
     <title>Document</title>
 </head>
 <body>
-    <?php include './components/nav.php';
-?>
+    <?php include './components/nav.php';?>
+    <?php include './dbcon.php';?>
+
     <h1 class="text-pink-400">hiii</h1>
 </body>
 </html>

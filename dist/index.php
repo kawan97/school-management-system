@@ -11,6 +11,15 @@
 <body>
     <?php include './components/nav.php';?>
     <?php include './dbcon.php';?>
+    <?php
+    if(!isset($_SESSION)) 
+    { 
+        session_start(); 
+    } 
+?>
+    <?php
+print_r($_SESSION);
+?>
 
     <h1 class="text-pink-400">hiii</h1>
 </body>

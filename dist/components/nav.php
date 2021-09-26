@@ -1,3 +1,4 @@
+<?php //session_start(); ?>
 <nav class="bg-white shadow-lg">
     <div class="max-w-6xl mx-auto px-4">
         <div class="flex justify-between">
@@ -19,10 +20,30 @@
                 </div>
             </div>
             <!-- Secondary Navbar items -->
-            <div class="hidden md:flex items-center space-x-3 ">
+            <?php
+    if(!isset($_SESSION)) 
+    { 
+        session_start(); 
+    } 
+?>
+            <?php 
+            if(!isset($_SESSION['username'])){
+                echo ' <div class="hidden md:flex items-center space-x-3 ">
                 <a href="login.php" class="py-2 px-2 font-medium text-gray-500 rounded hover:bg-green-500 hover:text-white transition duration-300">Log In</a>
                 <a href="signup.php" class="py-2 px-2 font-medium text-white bg-green-500 rounded hover:bg-green-400 transition duration-300">Sign Up</a>
-            </div>
+            </div>';
+            }else{
+                echo '<div class="hidden md:flex items-center space-x-3 ">
+                <div class="py-2 px-2 font-medium text-gray-500 rounded hover:border-b-4 hover:border-green-500 hover:text-green-500 transition duration-300">type:'.$_SESSION['type'].'</div>
+            ';
+                echo '
+                <a href="logout.php" class="py-2 px-2 font-medium text-white bg-green-500 rounded hover:bg-green-400 transition duration-300">LogOut</a>
+            </div>';
+
+            }
+            
+            ?>
+
             <!-- Mobile menu button -->
             <div class="md:hidden flex items-center">
                 <button class="outline-none mobile-menu-button">

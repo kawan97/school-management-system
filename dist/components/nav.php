@@ -1,5 +1,12 @@
-<?php //session_start(); ?>
-<nav class="bg-white shadow-lg">
+
+<?php
+include './dbcon.php';
+
+    if(!isset($_SESSION)) 
+    { 
+        session_start(); 
+    } 
+?><nav class="bg-white shadow-lg">
     <div class="max-w-6xl mx-auto px-4">
         <div class="flex justify-between">
             <div class="flex space-x-7">
@@ -13,19 +20,26 @@
                 </div>
                 <!-- Primary Navbar items -->
                 <div class="hidden md:flex items-center space-x-1">
-                    <a href="" class="py-4 px-2 text-green-500 border-b-4 border-green-500 font-semibold ">Home</a>
-                    <a href="" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">Services</a>
+                    <a href="index.php" class="py-4 px-2 text-green-500 border-b-4 border-green-500 font-semibold ">Home</a>
+                    <?php  
+                    if(isset($_SESSION['role'])){
+                        if($_SESSION['role'] == 'admin'){
+                            $sql="select * from users where status=?;"; 
+                            $stmt=$pdo->prepare($sql); 
+                            $stmt->execute(array('deactivate'));   
+                            $count=$stmt->rowCount();
+                            echo '<a href="acceptuser.php" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">accept user('.$count.')</a>
+                            ';
+                        }
+                    }
+                    ?>
+
                     <a href="" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">About US </a>
                     <a href="" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">Contact Us</a>
                 </div>
             </div>
             <!-- Secondary Navbar items -->
-            <?php
-    if(!isset($_SESSION)) 
-    { 
-        session_start(); 
-    } 
-?>
+           
             <?php 
             if(!isset($_SESSION['username'])){
                 echo ' <div class="hidden md:flex items-center space-x-3 ">

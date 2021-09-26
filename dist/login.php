@@ -19,6 +19,7 @@ if ( isset( $_POST['submit'])) {
   $getusername="";
   $getpassword=""; 
   $getfullname="";
+  $getrole="";
   $sql="select * from users where username=? and password=?;"; 
   $stmt=$pdo->prepare($sql); 
   $stmt->execute(array($username, $password)); 
@@ -26,11 +27,14 @@ if ( isset( $_POST['submit'])) {
     
       $getusername=$row['username']; 
       $getpassword=$row['password']; 
+      $getrole=$row['role']; 
+
       $getfullname=$row['firstname'].' '.$row['lastname'];
        $pdo= null;
   }
 if ($stmt->rowCount()==1){ 
-$_SESSION['type']='self'; 
+$_SESSION['type']='self';
+$_SESSION['role']=$getrole; 
 $_SESSION['username']=$getusername; 
 $_SESSION['password']=$getpassword; 
 setcookie("fullname", $getfullname, time() + (86400 * 2), "/");
@@ -52,6 +56,7 @@ header ('Location: index.php');
   if($check){
     if ($stmt->rowCount()==1){ 
       $_SESSION['type']='parent'; 
+      $_SESSION['role']='parent'; 
       $_SESSION['username']=$username; 
       $_SESSION['password']=$key; 
       setcookie("fullname", $username, time() + (86400 * 2), "/");

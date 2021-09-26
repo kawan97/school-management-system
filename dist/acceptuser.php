@@ -1,5 +1,19 @@
 <?php
 ob_start();  
+if(!isset($_SESSION)) 
+{ 
+    session_start(); 
+} 
+if(isset($_SESSION['username']) && isset($_SESSION['password']) && isset($_SESSION['role'])){
+  if($_SESSION['role'] == 'admin'){
+  }else{
+    header("location: ./index.php",  true );  exit;
+
+  }
+}else{
+  header("location: ./index.php",  true );  exit;
+
+}
 include './dbcon.php';
 
  $sql="select * from users where status=?;"; 
@@ -22,6 +36,7 @@ include './dbcon.php';
 <?php include './components/nav.php';?>
 
 <div class="container  py-4 ">
+  <h1 class="text-center text-white text-2xl	">New users</h1>
 <?php
  while ($row = $stmt->fetch()) { 
   if ( isset( $_POST['accept'.$row['username']])) {

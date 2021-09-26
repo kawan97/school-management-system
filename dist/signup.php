@@ -29,12 +29,28 @@ if(isset($_POST['submit']))
  
         }else{
           //insert to db with stu user 
+          $password=hash('sha256', $password);
+          $sql="insert into users(username,firstname,lastname,email,password,role)values(?,?,?,?,?,?);";  
+          $execu=$pdo->prepare($sql);
+          $execu->execute((array($username,$firstname,$lastname,$email,$password,$role))); 
+          //generate a key for parent
+          $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+          $charactersLength = strlen($characters);
+          $randomString = '';
+          for ($i = 0; $i <20; $i++) {
+              $randomString .= $characters[rand(0, $charactersLength - 1)];
+          }
+          $sql="insert into parent(parentkey,username)values(?,?);";  
+          $execu=$pdo->prepare($sql);
+          $execu->execute((array($randomString,$username)));
+          $pdo= null;
+          header("location: index.php",  true,  301 );  exit;
 
         }
       }else{
          //insert to db with teacher user 
          $password=hash('sha256', $password);
-         $sql="insert into users(username,firstname,lastname,email,password,role)values(?,?,?,?,?,?) ";  
+         $sql="insert into users(username,firstname,lastname,email,password,role)values(?,?,?,?,?,?);";  
          $execu=$pdo->prepare($sql);
          $execu->execute((array($username,$firstname,$lastname,$email,$password,$role))); 
          $pdo= null;

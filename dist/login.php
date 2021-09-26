@@ -11,7 +11,7 @@
 <body class='bg-green-500'>
 <?php include './components/nav.php';?>
 
-<div class="container  py-4 ">
+<div class="container  py-7  ">
 <form class="w-full max-w-lg mx-auto p-4 bg-gray-100 rounded-xl">
   <div class="flex flex-wrap -mx-3 mb-6">
 

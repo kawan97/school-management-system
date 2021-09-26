@@ -1,3 +1,5 @@
+<?php include './components/authantiloginsignup.php';?>
+
 <?php
     if(!isset($_SESSION)) 
     { 

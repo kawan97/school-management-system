@@ -1,3 +1,4 @@
+<?php include './components/authantiloginsignup.php';?>
 <?php
 include './dbcon.php';
 

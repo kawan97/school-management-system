@@ -1,3 +1,5 @@
+<?php include './components/authbacktolgin.php';?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +11,8 @@
     <title>Document</title>
 </head>
 <body>
+
+
     <?php include './components/nav.php';?>
     <?php include './dbcon.php';?>
     <?php

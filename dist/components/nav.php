@@ -33,7 +33,7 @@ include './dbcon.php';
                         }
                     }
                     ?>
-                                        <?php  
+                     <?php  
                     if(isset($_SESSION['role']) && isset($_SESSION['id'])){
                         if($_SESSION['role'] == 'teacher'){
                             $sql="select * from class where teacherid=?;"; 
@@ -45,6 +45,32 @@ include './dbcon.php';
                         }
                     }
                     ?>
+                                         <?php  
+                    if(isset($_SESSION['role']) && isset($_SESSION['id'])){
+                        if($_SESSION['role'] == 'student'){
+                            $sql="select * from enrollstu where studentname=? and status=?;"; 
+                            $stmt=$pdo->prepare($sql); 
+                            $stmt->execute(array($_SESSION['username'],'active'));   
+                            $count=$stmt->rowCount();
+                            echo '<a href="myclass.php" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">My Class('.$count.')</a>
+                            ';
+                        }
+                    }
+                    ?>
+                    <?php  
+                    if(isset($_SESSION['role']) && isset($_SESSION['id'])){
+                        if($_SESSION['role'] == 'teacher'){
+                            $sql="select enrollstu.id From enrollstu INNER JOIN
+                            class ON enrollstu.classid=class.id WHERE enrollstu.status=? AND class.teachername=?;"; 
+                            $stmt=$pdo->prepare($sql); 
+                            $stmt->execute(array('deactivate',$_SESSION['username']));   
+                            $count=$stmt->rowCount();
+                            echo '<a href="acceptstudent.php" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">AcceptStudent('.$count.')</a>
+                            ';
+                        }
+                    }
+                    ?>
+
                                         <?php  
                     if(isset($_SESSION['role'])){
                         if($_SESSION['role'] == 'admin'){

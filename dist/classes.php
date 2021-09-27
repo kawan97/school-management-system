@@ -10,14 +10,8 @@ if(isset($_SESSION['username']) && isset($_SESSION['password']) && isset($_SESSI
 
   }else{
     include './dbcon.php';
-    //select all actives class 
-    $sql="select * from class where status=?;"; 
-    $stmt=$pdo->prepare($sql); 
-    $stmt->execute(array('active')); 
-    //select student's classes
-    $sqlenroll="select * from enrollstu where studentname=?;"; 
-    $stmtenroll=$pdo->prepare($sqlenroll); 
-    $stmtenroll->execute(array($_SESSION['username'])); 
+  
+
   }
 }else{
   header("location: ./index.php",  true );  exit;
@@ -39,6 +33,11 @@ if(isset($_SESSION['username']) && isset($_SESSION['password']) && isset($_SESSI
 <div class="container  py-4 ">
   <h1 class="text-center text-black text-2xl	">My Class</h1>
 <?php
+//select all actives class 
+$sql="select * from class where status=?;"; 
+$stmt=$pdo->prepare($sql); 
+$stmt->execute(array('active')); 
+
  while ($row = $stmt->fetch()) { 
   if($_SESSION['role'] == 'student'){
        //count class's student
@@ -48,6 +47,10 @@ if(isset($_SESSION['username']) && isset($_SESSION['password']) && isset($_SESSI
        $count=$stmtcount->rowCount();
       $check=true;
       ///thinking!!!!!
+        //select student's classes
+  $sqlenroll="select * from enrollstu where studentname=?;"; 
+  $stmtenroll=$pdo->prepare($sqlenroll); 
+  $stmtenroll->execute(array($_SESSION['username'])); 
       while ($rowenroll = $stmtenroll->fetch()) { 
         if($rowenroll['studentname'] == $_SESSION['username'] && $row['id'] == $rowenroll['classid']){
           if($rowenroll['status']== "deactivate"){
@@ -58,7 +61,7 @@ if(isset($_SESSION['username']) && isset($_SESSION['password']) && isset($_SESSI
           $link='<p class="flex-shrink-0 border-transparent border-4 '.$btncolor.' mx-4 text-white hover:text-green-800 text-sm py-1 px-2 rounded" type="button">
           '.$btntext.'   
              </p>';
-            //  break;
+             //break;
 
           }else{
             $check=false;

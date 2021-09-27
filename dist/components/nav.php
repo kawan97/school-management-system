@@ -66,6 +66,14 @@ include './dbcon.php';
                         }
                     }
                     ?>
+                     <?php
+                    if(isset($_SESSION['role'])){
+                        if($_SESSION['role'] == 'student'){
+                            echo '                    <a href="classes.php" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">Classes</a>
+                            ';
+                        }
+                    }
+                    ?>
 
                     <a href="" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">Contact Us</a>
                 </div>

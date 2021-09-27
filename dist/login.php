@@ -19,6 +19,7 @@ if ( isset( $_POST['submit'])) {
   $getusername="";
   $getpassword=""; 
   $getfullname="";
+  $getid="";
   $getrole="";
   $sql="select * from users where username=? and password=?;"; 
   $stmt=$pdo->prepare($sql); 
@@ -27,6 +28,8 @@ if ( isset( $_POST['submit'])) {
     
       $getusername=$row['username']; 
       $getpassword=$row['password']; 
+      $getid=$row['id']; 
+
       $getrole=$row['role']; 
 
       $getfullname=$row['firstname'].' '.$row['lastname'];
@@ -34,7 +37,8 @@ if ( isset( $_POST['submit'])) {
   }
 if ($stmt->rowCount()==1){ 
 $_SESSION['type']='self';
-$_SESSION['role']=$getrole; 
+$_SESSION['role']=$getrole;
+$_SESSION['id']=$getid; 
 $_SESSION['username']=$getusername; 
 $_SESSION['password']=$getpassword; 
 setcookie("fullname", $getfullname, time() + (86400 * 2), "/");

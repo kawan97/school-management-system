@@ -20,7 +20,7 @@ include './dbcon.php';
                 </div>
                 <!-- Primary Navbar items -->
                 <div class="hidden md:flex items-center space-x-1">
-                    <a href="index.php" class="py-4 px-2 text-green-500 border-b-4 border-green-500 font-semibold ">Home</a>
+                <a href="index.php" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">Home </a>
                     <?php  
                     if(isset($_SESSION['role'])){
                         if($_SESSION['role'] == 'admin'){
@@ -34,7 +34,15 @@ include './dbcon.php';
                     }
                     ?>
 
-                    <a href="" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">About US </a>
+                    <?php
+                    if(isset($_SESSION['role'])){
+                        if($_SESSION['role'] == 'teacher'){
+                            echo '                    <a href="addclass.php" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">Add Class</a>
+                            ';
+                        }
+                    }
+                    ?>
+
                     <a href="" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">Contact Us</a>
                 </div>
             </div>

@@ -33,6 +33,18 @@ include './dbcon.php';
                         }
                     }
                     ?>
+                                        <?php  
+                    if(isset($_SESSION['role'])){
+                        if($_SESSION['role'] == 'admin'){
+                            $sql="select * from class where status=?;"; 
+                            $stmt=$pdo->prepare($sql); 
+                            $stmt->execute(array('deactivate'));   
+                            $count=$stmt->rowCount();
+                            echo '<a href="acceptclass.php" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">accept class('.$count.')</a>
+                            ';
+                        }
+                    }
+                    ?>
 
                     <?php
                     if(isset($_SESSION['role'])){

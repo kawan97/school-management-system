@@ -14,12 +14,6 @@ if(isset($_SESSION['username']) && isset($_SESSION['password']) && isset($_SESSI
   header("location: ./index.php",  true );  exit;
 
 }
-include './dbcon.php';
-
- $sql="select * from users where status=?;"; 
- $stmt=$pdo->prepare($sql); 
- $stmt->execute(array('deactivate')); 
-
 
 ?>
 <!DOCTYPE html>
@@ -38,6 +32,10 @@ include './dbcon.php';
 <div class="container  py-4 ">
   <h1 class="text-center text-white text-2xl	">New users</h1>
 <?php
+include './dbcon.php';
+$sql="select * from users where status=?;"; 
+$stmt=$pdo->prepare($sql); 
+$stmt->execute(array('deactivate')); 
  while ($row = $stmt->fetch()) { 
   if ( isset( $_POST['accept'.$row['username']])) {
     $username=addslashes((htmlentities($_POST['username'])));
@@ -86,7 +84,6 @@ include './dbcon.php';
   
   
   ';
-
 }
 ?>
 

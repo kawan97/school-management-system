@@ -63,7 +63,7 @@ $lectureid=addslashes((htmlentities($_GET['id'])));
 
   }
   }
-  echo $classid;
+  // echo $classid;
   ?>
   <?php  
   $sql="select * from enrollstu where classid=?;"; 

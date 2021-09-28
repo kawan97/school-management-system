@@ -77,9 +77,9 @@ $lectureid=addslashes((htmlentities($_GET['id'])));
     if($count==0){
       if ( isset( $_POST['true'.$row['id']])) {
         $degree=addslashes((htmlentities($_POST['degree'])));
-        $sql="insert into feedback(lectureid,degree,studentname)values(?,?,?);";       
+        $sql="insert into feedback(lectureid,degree,classid,studentname)values(?,?,?,?);";       
        $execu=$pdo->prepare($sql);
-       $execu->execute(array($lectureid,(int)$degree,$row['studentname'])); 
+       $execu->execute(array($lectureid,(int)$degree,(int)$classid,$row['studentname'])); 
        $pdo= null;
        header("location: ./feedback.php?id=".$lectureid,  true,  301 );  exit;
       }

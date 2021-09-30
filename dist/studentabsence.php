@@ -34,8 +34,8 @@ $start=$year.'-'.$month.'-1';
 $end = strtotime($start);
 $end = date("Y-m-d",strtotime("+1 month",$end));
 
-$sqldegree="select lecture.lecturename,lecture.date,feedback.degree From lecture INNER JOIN
-feedback ON lecture.id=feedback.lectureid WHERE lecture.classid=? AND feedback.classid=? AND feedback.studentname=? AND
+$sqldegree="select lecture.lecturename,lecture.date,absence.absence From lecture INNER JOIN
+absence ON lecture.id=absence.lectureid WHERE lecture.classid=? AND absence.classid=? AND absence.studentname=? AND
  (lecture.date >= ? AND lecture.date < ?);"; 
 $stmtdegree=$pdo->prepare($sqldegree); 
 $stmtdegree->execute(array($classid,$classid,$_SESSION['username'],$start,$end));
@@ -44,15 +44,15 @@ $dates='[';
 $colors='[';
 
 while ($rowdegree = $stmtdegree->fetch()) {
-  if((int)$rowdegree['degree']>=4){
+  if((int)$rowdegree['absence']>=1){
+    $label='presence';
     $colors=$colors.'\'green\',';
-  }else if((int)$rowdegree['degree']==3){
-    $colors=$colors.'\'orange\',';
-  }else if((int)$rowdegree['degree']<=2){
+  }else if((int)$rowdegree['absence']==0){
     $colors=$colors.'\'red\',';
+    $label='absence';
   }
-  $dgrees=$dgrees.$rowdegree['degree'].',';
-  $dates=$dates.'\''.$rowdegree['date'].'\',';
+  $dgrees=$dgrees.'1,';
+  $dates=$dates.'\''.$rowdegree['date'].' , '.$label.'\',';
 
 
 }
@@ -66,7 +66,7 @@ $dates=$dates.']';
 if(isset($_POST['submit'])) {
   $month=addslashes((htmlentities($_POST["month"])));
   $year=addslashes((htmlentities($_POST['year'])));
-  header("location: studentfeedback.php?id=".$classid.'&&month='.$month.'&&year='.$year);  
+  header("location: studentabsence.php?id=".$classid.'&&month='.$month.'&&year='.$year);  
 }
 
 
@@ -81,7 +81,7 @@ if(isset($_POST['submit'])) {
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
-  <title>Student Feedback</title>
+  <title>Student absence</title>
 </head>
 <body class="bg-green-200">
 <?php include './components/nav.php';?>
@@ -109,7 +109,7 @@ if(isset($_POST['submit'])) {
 
 <div class="w-full  mx-auto max-w-lg my-10 bg-gray-100 rounded-xl">
 
-<h1 class="text-center">Student Feedback  /5</h1>
+<h1 class="text-center">Student absence  /1</h1>
 <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
 
 <script>
@@ -118,17 +118,17 @@ var yValues = <?php echo $dgrees; ?>;
 var barColors = <?php echo $colors; ?> ;
 
 new Chart("myChart", {
-  type: "line",
+  type: "bar",
   data: {
     labels: xValues,
     datasets: [{
-      backgroundColor: "purple",
-      borderColor: "black",
+      backgroundColor: barColors,
       data: yValues
     }]
   },
   
   options: {
+    
     legend: {display: false},
     scales: {
                     xAxes: [{
@@ -139,18 +139,18 @@ new Chart("myChart", {
                             }
                         }],
                     yAxes: [{
-                            display: true,
+                            display: false,
                             ticks: {
                                 beginAtZero: true,
                                 steps: 1,
                                 stepValue: 1,
-                                max: 5
+                                max: 1
                             }
                         }]
                 },
     title: {
       display: true,
-      text: "Student Name <?php echo $_SESSION['username']; ?>,Start: <?php echo $start; ?> End:<?php echo $end; ?>,   /5 "
+      text: "Student Name <?php echo $_SESSION['username']; ?>,Start: <?php echo $start; ?> End:<?php echo $end; ?>,   /1"
     }
   }
 });

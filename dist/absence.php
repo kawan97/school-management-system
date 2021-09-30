@@ -76,16 +76,16 @@ $lectureid=addslashes((htmlentities($_GET['id'])));
     $count=$stmtcheck->rowCount();
     if($count==0){
       if ( isset( $_POST['true'.$row['id']])) {
-        $sql="insert into absence(lectureid,absence,studentname)values(?,?,?);";       
+        $sql="insert into absence(lectureid,absence,studentname,classid)values(?,?,?,?);";       
        $execu=$pdo->prepare($sql);
-       $execu->execute(array($lectureid,1,$row['studentname'])); 
+       $execu->execute(array($lectureid,1,$row['studentname'],(int)$classid)); 
        $pdo= null;
        header("location: ./absence.php?id=".$lectureid,  true,  301 );  exit;
       }
       if ( isset( $_POST['false'.$row['id']])) {
-        $sql="insert into absence(lectureid,absence,studentname)values(?,?,?);";       
+        $sql="insert into absence(lectureid,absence,studentname,classid)values(?,?,?,?);";       
        $execu=$pdo->prepare($sql);
-       $execu->execute(array($lectureid,0,$row['studentname'])); 
+       $execu->execute(array($lectureid,0,$row['studentname'],$classid)); 
         $pdo= null;
         header("location: ./absence.php?id=".$lectureid,  true,  301 );  exit;
       }

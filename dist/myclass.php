@@ -56,7 +56,7 @@ if($_SESSION['role'] == 'teacher'){
        $bg_color='bg-red-100';
     }else{
        $bg_color='bg-green-100';
-       $link='<a  href="class?id='.$row['id'].'" class="flex-shrink-0 border-transparent border-4 bg-green-500 mx-4 text-white hover:text-green-800 text-sm py-1 px-2 rounded" type="button">
+       $link='<a  href="lectures?id='.$row['id'].'" class="flex-shrink-0 border-transparent border-4 bg-green-500 mx-4 text-white hover:text-green-800 text-sm py-1 px-2 rounded" type="button">
        Manage   
           </a>';
 
@@ -75,9 +75,11 @@ if($_SESSION['role'] == 'teacher'){
 
   if($_SESSION['role'] == 'student'){
     $bg_color='bg-green-100';
-       $link='<a  href="class?id='.$row['id'].'" class="flex-shrink-0 border-transparent border-4 bg-green-500 mx-4 text-white hover:text-green-800 text-sm py-1 px-2 rounded" type="button">
-       Manage   
-          </a>';
+       $link='<a  href="studentfeedback?id='.$row['id'].'" class="flex-shrink-0 border-transparent border-4 bg-green-500 mx-4 text-white hover:text-green-800 text-sm py-1 px-2 rounded" type="button">
+       FeedBack   
+          </a><a  href="studentabsence?id='.$row['id'].'" class="flex-shrink-0 border-transparent border-4 bg-green-500 mx-4 text-white hover:text-green-800 text-sm py-1 px-2 rounded" type="button">
+          Absence   
+             </a>';
 
           echo '
  <div class="w-full mx-auto max-w-sm '.$bg_color.'  my-3 rounded-xl">

@@ -5,6 +5,7 @@ include './dbcon.php';
 $emailerror=false;
 $usernameerror=false;
 $username="";
+$phone="";
 $firstname="";
 $lastname="";
 $password="";
@@ -16,6 +17,7 @@ if(isset($_POST['submit']))
      $firstname=addslashes((htmlentities($_POST['firstname'])));
      $lastname=addslashes((htmlentities($_POST['lastname'])));
      $email=addslashes((htmlentities($_POST['email'])));
+     $phone=addslashes((htmlentities($_POST['phone'])));
      $role=addslashes((htmlentities($_POST['role'])));
      $password=addslashes((htmlentities($_POST['password'])));
      $sql="SELECT * FROM `users` WHERE `username`=?;";  
@@ -26,15 +28,16 @@ if(isset($_POST['submit']))
        $usernameerror=true;
      }else{
       if($role == "student"){
-        if(!$email){
+        if(!($email || $phone)){
          $emailerror=true;
  
         }else{
           //insert to db with stu user 
           $password=hash('sha256', $password);
-          $sql="insert into users(username,firstname,lastname,email,password,role)values(?,?,?,?,?,?);";  
+          $sql="insert into users(username,firstname,lastname,email,password,role,phone)values(?,?,?,?,?,?,?);";  
           $execu=$pdo->prepare($sql);
-          $execu->execute((array($username,$firstname,$lastname,$email,$password,$role))); 
+          echo $phone;
+          $execu->execute((array($username,$firstname,$lastname,$email,$password,$role,(int)$phone))); 
           //generate a key for parent
           $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
           $charactersLength = strlen($characters);
@@ -52,9 +55,9 @@ if(isset($_POST['submit']))
       }else{
          //insert to db with teacher user 
          $password=hash('sha256', $password);
-         $sql="insert into users(username,firstname,lastname,email,password,role)values(?,?,?,?,?,?);";  
+         $sql="insert into users(username,firstname,lastname,email,password,role,phone)values(?,?,?,?,?,?,?);";  
          $execu=$pdo->prepare($sql);
-         $execu->execute((array($username,$firstname,$lastname,$email,$password,$role))); 
+         $execu->execute((array($username,$firstname,$lastname,$email,$password,$role,(int)$phone))); 
          $pdo= null;
          header("location: index.php",  true,  301 );  exit;
  
@@ -109,7 +112,16 @@ if(isset($_POST['submit']))
         Parent Email 
       </label>
       <input value="<?php echo $email; ?>" name="email" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded <?php if($emailerror)echo ' border border-red-500'; ?> py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-parent-email" type="email" placeholder="Parent Email">
-      <p class="text-gray-600 <?php if($emailerror)echo ' text-red-600'; ?> text-xs italic">If You Are Student Your Parent's Email is Required</p>
+    </div>
+    <div class="w-full md:w-full  mb-6 md:mb-0">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-parent-email">
+        Parent Phone Number 
+      </label>
+      <span class="z-10 h-full leading-snug  font-normal absolute text-center text-blueGray-300 absolute bg-transparent rounded text-base items-center justify-center w-8 pl-3 py-3">
+    <i class="fas fa-lock">+964</i>
+  </span>
+      <input value="<?php echo $phone; ?>" name="phone" max="15" class="px-14 appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded <?php if($emailerror)echo ' border border-red-500'; ?> py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-parent-email" type="number" placeholder="Parent phone number Ex: 770XXXXXXX">
+      <p class="text-gray-600 <?php if($emailerror)echo ' text-red-600'; ?> text-xs italic">If You Are Student Your Parent's Email Or Your Parent's Phone is Required</p>
     </div>
 <br>
   <div class="flex flex-wrap -mx-3 mb-6">

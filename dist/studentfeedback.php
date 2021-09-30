@@ -21,10 +21,24 @@ $classid=addslashes((htmlentities($_GET['id'])));
     header("location: ./index.php",  true );  exit;
 }
 
+if (isset($_GET['month']) && isset($_GET['year'])) {
+  $month=addslashes((htmlentities($_GET['month'])));
+  $year=addslashes((htmlentities($_GET['year'])));
+}else{
+  $year=date("Y");
+  $month=date('m');
+
+}
+
+$start=$year.'-'.$month.'-1';
+$end = strtotime($start);
+$end = date("Y-m-d",strtotime("+1 month",$end));
+
 $sqldegree="select lecture.lecturename,lecture.date,feedback.degree From lecture INNER JOIN
-feedback ON lecture.id=feedback.lectureid WHERE lecture.classid=? AND feedback.classid=? AND feedback.studentname=?;"; 
+feedback ON lecture.id=feedback.lectureid WHERE lecture.classid=? AND feedback.classid=? AND feedback.studentname=? AND
+ (lecture.date >= ? AND lecture.date < ?);"; 
 $stmtdegree=$pdo->prepare($sqldegree); 
-$stmtdegree->execute(array($classid,$classid,$_SESSION['username']));
+$stmtdegree->execute(array($classid,$classid,$_SESSION['username'],$start,$end));
 $dgrees='[';
 $dates='[';
 $colors='[';
@@ -49,6 +63,13 @@ $colors=$colors.']';
 $dgrees=$dgrees.']';
 $dates=$dates.']';
 
+if(isset($_POST['submit'])) {
+  $month=addslashes((htmlentities($_POST["month"])));
+  $year=addslashes((htmlentities($_POST['year'])));
+  header("location: studentfeedback.php?id=".$classid.'&&month='.$month.'&&year='.$year);  
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -64,6 +85,28 @@ $dates=$dates.']';
 </head>
 <body class="bg-green-200">
 <?php include './components/nav.php';?>
+<form method="POST" class="w-full mt-8 max-w-lg mx-auto p-4 bg-gray-100 rounded-xl">
+  <div class="flex flex-wrap -mx-3 mb-6">
+    <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+        Month
+      </label>
+      <input value="<?php echo $month; ?>" required name="month" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="number" max="12" placeholder="enter month">
+    </div>
+    <div class="w-full md:w-1/2 px-3">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
+      Year
+      </label>
+      <input value="<?php echo $year; ?>" required name="year" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-last-name" type="number" placeholder="enter year">
+    </div>
+  </div>
+    </div>
+    <button name="submit" type="submit" class="flex-shrink-0 bg-green-500 hover:bg-green-700 border-gray-100 my-4  py-4 w-full hover:border-gray-300 text-xl border-4 text-white py-1 px-2 rounded" >
+     Go!
+    </button> 
+  </div>
+</form>
+
 <div class="w-full  mx-auto max-w-lg my-10 bg-gray-100 rounded-xl">
 
 <h1 class="text-center">Student Feedback  /5</h1>
@@ -106,7 +149,7 @@ new Chart("myChart", {
                 },
     title: {
       display: true,
-      text: "Student Name <?php echo $_SESSION['username'] ?>, /5"
+      text: "Student Name <?php echo $_SESSION['username']; ?>,Start: <?php echo $start; ?> End:<?php echo $end; ?>,   /5 "
     }
   }
 });

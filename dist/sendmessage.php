@@ -15,7 +15,7 @@ if(isset($_POST['submit']))
      $execu=$pdo->prepare($sql);
      $execu->execute((array($message,$classname,$_SESSION['username'])));
      $pdo= null;
-    // header("location: index.php",  true,  301 );  exit;
+    header("location: index.php",  true,  301 );  exit;
 
  }
 

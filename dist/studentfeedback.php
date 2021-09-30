@@ -17,6 +17,13 @@ if(isset($_SESSION['username']) && isset($_SESSION['password']) && isset($_SESSI
 include './dbcon.php';
 if (isset($_GET['id'])) { 
 $classid=addslashes((htmlentities($_GET['id'])));
+$sqlclass="select * from class where id=?;"; 
+$stmtclass=$pdo->prepare($sqlclass); 
+$stmtclass->execute(array($classid));
+while ($rowclass = $stmtclass->fetch()) {
+$classname=$rowclass['classname'];
+}
+
 }else{
     header("location: ./index.php",  true );  exit;
 }
@@ -85,7 +92,9 @@ if(isset($_POST['submit'])) {
 </head>
 <body class="bg-green-200">
 <?php include './components/nav.php';?>
-<form method="POST" class="w-full mt-8 max-w-lg mx-auto p-4 bg-gray-100 rounded-xl">
+<h1 class="text-center mt-8 mb-4 text-xl "><?php echo $classname; ?></h1>
+
+<form method="POST" class="w-full max-w-lg mx-auto p-4 bg-gray-100 rounded-xl">
   <div class="flex flex-wrap -mx-3 mb-6">
     <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
       <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
@@ -116,6 +125,16 @@ if(isset($_POST['submit'])) {
 var xValues = <?php echo $dates; ?>;
 var yValues = <?php echo $dgrees; ?>;
 var barColors = <?php echo $colors; ?> ;
+
+
+Chart.plugins.register({
+  beforeDraw: function(chartInstance) {
+    var ctx = chartInstance.chart.ctx;
+    ctx.fillStyle = "white";
+    //ctx.fillStyle = "rgba(255, 0, 255, 0.5)";
+    ctx.fillRect(0, 0, chartInstance.chart.width, chartInstance.chart.height);
+  }
+});
 
 new Chart("myChart", {
   type: "line",

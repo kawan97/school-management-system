@@ -1,6 +1,12 @@
 <?php
  require './api/src/Twilio/autoload.php';
- use Twilio\Rest\Client;
+ require_once "../vendor/autoload.php";
+
+  use PHPMailer\PHPMailer\PHPMailer;
+  use PHPMailer\PHPMailer\SMTP;
+  use PHPMailer\PHPMailer\Exception;
+  use Twilio\Rest\Client;
+  
 ob_start();  
 if(!isset($_SESSION)) 
 { 
@@ -16,6 +22,29 @@ if(isset($_SESSION['username']) && isset($_SESSION['password']) && isset($_SESSI
   header("location: ./index.php",  true );  exit;
 
 }
+
+$mail = new PHPMailer(true);
+
+//Enable SMTP debugging.
+$mail->SMTPDebug = 3;                               
+//Set PHPMailer to use SMTP.
+$mail->isSMTP();            
+//Set SMTP host name                          
+$mail->Host = "";
+//Set this to true if SMTP host requires authentication to send email
+$mail->SMTPAuth = true;                          
+//Provide username and password     
+$mail->Username = "";                 
+$mail->Password = "";                           
+//If SMTP requires TLS encryption then set it
+$mail->SMTPSecure = "tls";                           
+//Set TCP port to connect to
+$mail->Port = 2525;  
+$mail->From = "";     
+
+$account_sid = '';
+$auth_token = '';
+$twilio_number = "";
 
 ?>
 <!DOCTYPE html>
@@ -45,7 +74,7 @@ $stmt->execute(array('deactivate'));
     SET status = ?
    WHERE username = ?;";       
    $execu=$pdo->prepare($sql);
-   $execu->execute(array('deactivate',$username)); 
+   $execu->execute(array('active',$username)); 
    /////send  msg to parent 
    $sqlparent="select * from parent where username=?;"; 
    $stmtparent=$pdo->prepare($sqlparent); 
@@ -53,9 +82,6 @@ $stmt->execute(array('deactivate'));
  while ($rowparent = $stmtparent->fetch()) {  
    // by phone number 
 if($row['phone'] != 0){
-  $account_sid = '';
-  $auth_token = '';
-  $twilio_number = "+";
   $client = new Client($account_sid, $auth_token);
   $client->messages->create(
     '+964'.$row['phone'],
@@ -72,41 +98,33 @@ if($row['phone'] != 0){
    //by email   
    if($row['email'] != ''){
 
-   $to = $row['email'];
-   //$to='admin@wampserver.invalid';
-    $subject = "Registration";
+    $mail->FromName = $row['firstname']." parent key";
+//, "Recepient Name"
+    $mail->addAddress($row['email']);
+    
+    $mail->isHTML(true);
 
-$message = '
-<html>
-<head>
-<title>created acoount in our system</title>
-</head>
-<body>
-<p>dear '.$rowparent["username"].'\'s parent your child register in our system and you can login in his/her account with your parenykey ,here is your user and parentkey,
+    $message = '<p>dear '.$rowparent["username"].'\'s parent your child register in our system and you can login in his/her account with your parenykey ,here is your user and parentkey,
 </p>
 <br>
 Username:'.$rowparent["username"].'
 <br>
-Parenykey: '.$rowparent["parentkey"].'
-
-</body>
-</html>
-';
-
-// Always set content-type when sending HTML email
-$headers = "MIME-Version: 1.0" . "\r\n";
-$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-
-// More headers
-$headers .= 'From: <admin@SMS.com>' . "\r\n";
-$headers .= 'Cc: deni@SMS.com' . "\r\n";
-
-mail($to,$subject,$message,$headers);
-
+Parenykey: '.$rowparent["parentkey"];
+    
+    $mail->Subject = "created acoount in our system";
+    $mail->Body = $message;
+    // $mail->AltBody = "This is the plain text version of the email content";
+    
+    try {
+        $mail->send();
+      //  echo "Message has been sent successfully";
+    } catch (Exception $e) {
+       // echo "Mailer Error: " . $mail->ErrorInfo;
+    }
 
    }
     $pdo= null;
-   //header("location: ./acceptuser.php",  true,  301 );  exit;
+   header("location: ./acceptuser.php",  true,  301 );  exit;
 
 
  }

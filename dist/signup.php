@@ -120,7 +120,7 @@ if(isset($_POST['submit']))
       <span class="z-10 h-full leading-snug  font-normal absolute text-center text-blueGray-300 absolute bg-transparent rounded text-base items-center justify-center w-8 pl-3 py-3">
     <i class="fas fa-lock">+964</i>
   </span>
-      <input value="<?php echo $phone; ?>" name="phone" max="15" class="px-14 appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded <?php if($emailerror)echo ' border border-red-500'; ?> py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-parent-email" type="number" placeholder="Parent phone number Ex: 770XXXXXXX">
+      <input value="<?php echo $phone; ?>" name="phone" class="px-14 appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded <?php if($emailerror)echo ' border border-red-500'; ?> py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-parent-email" type="number" placeholder="Parent phone number Ex: 770XXXXXXX">
       <p class="text-gray-600 <?php if($emailerror)echo ' text-red-600'; ?> text-xs italic">If You Are Student Your Parent's Email Or Your Parent's Phone is Required</p>
     </div>
 <br>

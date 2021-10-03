@@ -1,4 +1,6 @@
 <?php
+ require './api/src/Twilio/autoload.php';
+ use Twilio\Rest\Client;
 ob_start();  
 if(!isset($_SESSION)) 
 { 
@@ -43,9 +45,72 @@ $stmt->execute(array('deactivate'));
     SET status = ?
    WHERE username = ?;";       
    $execu=$pdo->prepare($sql);
-   $execu->execute(array('active',$username)); 
-   $pdo= null;
-   header("location: ./acceptuser.php",  true,  301 );  exit;
+   $execu->execute(array('deactivate',$username)); 
+   /////send  msg to parent 
+   $sqlparent="select * from parent where username=?;"; 
+   $stmtparent=$pdo->prepare($sqlparent); 
+   $stmtparent->execute(array($username)); 
+ while ($rowparent = $stmtparent->fetch()) {  
+   // by phone number 
+if($row['phone'] != 0){
+  $account_sid = '';
+  $auth_token = '';
+  $twilio_number = "+";
+  $client = new Client($account_sid, $auth_token);
+  $client->messages->create(
+    '+964'.$row['phone'],
+    array(
+        'from' => $twilio_number,
+        'body' => 'dear '.$rowparent['username'].'\'s parent your child register in our system and you can login in his/her account with your parenykey ,here is your user and parentkey,
+  Username:'.$rowparent['username'].' , 
+  Parenykey: '.$rowparent['parentkey']
+        
+    )
+);
+}
+
+   //by email   
+   if($row['email'] != ''){
+
+   $to = $row['email'];
+   //$to='admin@wampserver.invalid';
+    $subject = "Registration";
+
+$message = '
+<html>
+<head>
+<title>created acoount in our system</title>
+</head>
+<body>
+<p>dear '.$rowparent["username"].'\'s parent your child register in our system and you can login in his/her account with your parenykey ,here is your user and parentkey,
+</p>
+<br>
+Username:'.$rowparent["username"].'
+<br>
+Parenykey: '.$rowparent["parentkey"].'
+
+</body>
+</html>
+';
+
+// Always set content-type when sending HTML email
+$headers = "MIME-Version: 1.0" . "\r\n";
+$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+// More headers
+$headers .= 'From: <admin@SMS.com>' . "\r\n";
+$headers .= 'Cc: deni@SMS.com' . "\r\n";
+
+mail($to,$subject,$message,$headers);
+
+
+   }
+    $pdo= null;
+   //header("location: ./acceptuser.php",  true,  301 );  exit;
+
+
+ }
+
   }
   if ( isset( $_POST['delete'.$row['username']])) {
     $username=addslashes((htmlentities($_POST['username'])));
